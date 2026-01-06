@@ -60,5 +60,5 @@ const apiKey = "your_real_api_key_here";
 | ≥ 35°C     | Very light clothing 🩳 |
 
 
-License
+License<br>
 This project is open-source and free to use for learning and educational purposes.
