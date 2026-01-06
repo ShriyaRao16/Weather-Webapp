@@ -33,7 +33,7 @@ git clone https://github.com/ShriyaRao16/Weather-Webapp.git
 ```
 2.)Open the Project Folder
 ```md
-cd Weather-Webap
+cd Weather-Webapp
 ```
 3.)Add Your Weatherbit API Key
 
