@@ -37,7 +37,7 @@ cd Weather-Webapp
 ```
 3.)Add Your Weatherbit API Key
 
-  a.)Open weather.html in a code editor
+  a.)Open weather.html in a code editor<br>
   b.) Locate the following line in the JavaScript section:
 ```text
 const apiKey = "YOUR_API_KEY";
