@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Weather App</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #74ebd5, #9face6);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    .weather-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        width: 320px;
+        text-align: center;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: 90%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        outline: none;
+    }
+
+    button {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        background: #5c7cfa;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    button:hover {
+        background: #4c6ef5;
+    }
+
+    #temp {
+        font-size: 32px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    #icon {
+        font-size: 40px;
+    }
+
+    #outfit {
+        margin-top: 10px;
+        font-size: 15px;
+        color: #444;
+        background: #f1f3f5;
+        padding: 8px;
+        border-radius: 8px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="weather-card">
+    <h2>🌤️ Smart Weather</h2>
+
+    <input id="city" placeholder="Enter city name">
+    <br>
+    <button onclick="getWeather()">Get Weather</button>
+    <button onclick="getLocation()">📍 Use My Location</button>
+
+    <div id="icon"></div>
+    <div id="temp"></div>
+    <div id="desc"></div>
+    <div id="outfit"></div>
+</div>
+
+<script>
+const apiKey = "YOUR API KEY HERE";
+
+function setTempColor(temp) {
+    let tempEl = document.getElementById("temp");
+    if (temp < 15) tempEl.style.color = "#1c7ed6";      // Cold
+    else if (temp < 30) tempEl.style.color = "#2f9e44"; // Moderate
+    else tempEl.style.color = "#d9480f";                // Hot
+}
+
+function getIcon(description) {
+    description = description.toLowerCase();
+    if (description.includes("rain")) return "🌧️";
+    if (description.includes("cloud")) return "☁️";
+    if (description.includes("clear")) return "☀️";
+    if (description.includes("snow")) return "❄️";
+    return "🌤️";
+}
+
+function getOutfit(temp) {
+    if (temp < 15) return "🧥 Wear a jacket or sweater";
+    if (temp < 25) return "👕 Light layers will be perfect";
+    if (temp < 35) return "👗 Stay cool with cotton clothes";
+    return "🩳 Light clothing & stay hydrated";
+}
+
+function displayWeather(data) {
+    let temp = data.data[0].temp;
+    let desc = data.data[0].weather.description;
+
+    document.getElementById("temp").innerHTML = `${temp}°C`;
+    document.getElementById("desc").innerHTML = desc;
+    document.getElementById("icon").innerHTML = getIcon(desc);
+    document.getElementById("outfit").innerHTML = getOutfit(temp);
+
+    setTempColor(temp);
+}
+
+function getWeather() {
+    let city = document.getElementById("city").value;
+    if (!city) return alert("Enter a city name");
+
+    fetch(`https://api.weatherbit.io/v2.0/current?city=${city}&key=${apiKey}`)
+        .then(res => res.json())
+        .then(displayWeather)
+        .catch(() => alert("Unable to fetch weather"));
+}
+
+function getLocation() {
+    if (!navigator.geolocation) {
+        alert("Geolocation not supported");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(position => {
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+
+        fetch(`https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${apiKey}`)
+            .then(res => res.json())
+            .then(displayWeather)
+            .catch(() => alert("Location weather failed"));
+    });
+}
+</script>
+
+</body>
+</html>
